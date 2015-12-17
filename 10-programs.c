@@ -1,5 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "conio.h"
+
+
+#define KEY_UP 65
+#define KEY_DOWN 66
+#define KEY_OUT 61 // =
+#define KEY_ESC 27
+#define KEY_ENTER 10
 
 void zad1(void);
 void zad2(void);
@@ -14,6 +22,73 @@ void zad10(void);
 void zad11(void);
 void zad12(void);
 
+void print_menu(int num) {
+  int current = 0;
+
+  char menu_options[][255] = {
+    "Sum from 1 to n",
+    "Sum na n proizvolni ",
+    "Sreden uspeh",
+    "ax+b=0",
+    "Deliteli na n",
+    "Prosto li e",
+    "Prostite deliteli na n i tehniq broi",
+    "Broi na cifri v chislo",
+    "Sumata na cifrite v n",
+    "Kolko pyti a se sreshta v n",
+    "Da se izpishe n s cifrite na m naobratno naredeni"
+  };
+
+  // system("cls");
+  system("clear");
+
+  for(int i = 0; i < 11; i++) {
+    current = i + 1;
+    if (current == num)
+      printf("%d >   %s \n", current, menu_options[i]);
+    else
+      printf("%d:    %s \n", current, menu_options[i]);
+  }
+}
+
+int menu() {
+  int current = 1;
+  char ch, key;
+
+  while(ch = getch()) {
+    // Exit on exit charecter press
+    if (ch == KEY_OUT) break;
+
+    // Go to the chose option
+    if (ch == KEY_ENTER) {
+      printf("enter\n");
+      return current;
+    }
+
+    printf("Key# %d\n", ch);
+    if (ch == KEY_ESC) { // if the first value is an escape sequence
+      getch(); // skip the [
+
+      key = getch();
+      printf("Real Key# %d\n", ch);
+
+      switch(key) { // the real value
+
+        case KEY_UP:
+          printf("for arrow up\n");
+          current -= 1;
+          print_menu(current);
+          break;
+
+        case KEY_DOWN:
+          printf("for arrow down\n");
+          current += 1;
+          print_menu(current);
+          break;
+      }
+    }
+  }
+}
 
 
 int main()
@@ -23,22 +98,7 @@ int main()
 
   do {
 
-    printf(">Programa 1 is Sum from 1 to n \n");
-    printf(" Programa 2 is Sum na n proizvolni  \n");
-    printf(" Programa 3 is Sreden uspeh \n");
-    printf(" Programa 4 is ax+b=0 \n");
-    printf(" Programa 5 is Deliteli na n \n");
-    printf(" Programa 6 is Prosto li e \n");
-    printf(" Programa 7 is Prostite deliteli na n i tehniq broi \n");
-    printf(" Programa 8 is Broi na cifri v chislo \n");
-    printf(" Programa 9 is Sumata na cifrite v n \n");
-    printf(" Programa 10 is Kolko pyti a se sreshta v n \n");
-    printf(" Programa 11 is Da se izpishe n s cifrite na m naobratno naredeni \n");
-
-
-    printf("Choose Programa: \n");
-    scanf("%d",&zadachka);
-
+    zadachka = menu();
 
     switch(zadachka){
 
@@ -62,10 +122,6 @@ int main()
 
     printf(" \n Do you want to carry on? yes-1 no-just write ");
     scanf("%d",&yesorno);
-
-    // system("cls");
-    system("clear");
-
 
   } while(yesorno == 1);
 
