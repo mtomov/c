@@ -52,10 +52,12 @@ void print_menu(int num) {
 }
 
 int menu() {
+
   int current = 1;
   char ch, key;
 
-  while(ch = getch()) {
+  getch();
+  do {
     // Exit on exit charecter press
     if (ch == KEY_OUT) break;
 
@@ -87,7 +89,7 @@ int menu() {
           break;
       }
     }
-  }
+  } while(ch = getch());
 }
 
 
