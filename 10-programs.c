@@ -49,6 +49,8 @@ void print_menu(int num) {
     else
       printf("%d:    %s \n", current, menu_options[i]);
   }
+
+  printf("\n");
 }
 
 int menu() {
@@ -59,7 +61,8 @@ int menu() {
   getch();
   do {
     // Exit on exit charecter press
-    if (ch == KEY_OUT) break;
+    if (ch == KEY_OUT)
+      return 0;
 
     // Go to the chose option
     if (ch == KEY_ENTER) {
@@ -79,15 +82,15 @@ int menu() {
         case KEY_UP:
           printf("for arrow up\n");
           current -= 1;
-          print_menu(current);
           break;
 
         case KEY_DOWN:
           printf("for arrow down\n");
           current += 1;
-          print_menu(current);
           break;
       }
+
+      print_menu(current);
     }
   } while(ch = getch());
 }
@@ -99,11 +102,10 @@ int main()
   int zadachka=0,yesorno=0,n;
 
   do {
-
     zadachka = menu();
+    if (zadachka == 0) break;
 
     switch(zadachka){
-
       case 1: zad1();break;
       case 2: printf("Programa 2 \n");zad2();break;
       case 3: printf("Programa 3 \n"); zad3();break;
@@ -117,15 +119,10 @@ int main()
       case 11: printf("Programa 11 \n");zad11();break;
 
       default:
-
-      printf("There is not a zadachka with that number!");
-
+        printf("There is not a zadachka with that number!");
     }
 
-    printf(" \n Do you want to carry on? yes-1 no-just write ");
-    scanf("%d",&yesorno);
-
-  } while(yesorno == 1);
+  } while(1);
 
 
   return 0;
@@ -144,7 +141,7 @@ void zad1(void) {
     i++;
   }
 
-  printf("Sum = %d", sum);
+  printf("Sum = %d\n\n", sum);
 }
 
 void zad2(void) {
