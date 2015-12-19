@@ -56,13 +56,10 @@ void print_menu(int num) {
 int menu() {
 
   int current = 1;
-  char ch, key;
+  char ch, key, m;
 
-  getch();
   do {
-    // Exit on exit charecter press
-    if (ch == KEY_OUT)
-      return 0;
+    ch = getch();
 
     // Go to the chose option
     if (ch == KEY_ENTER) {
@@ -72,34 +69,36 @@ int menu() {
 
     printf("Key# %d\n", ch);
     if (ch == KEY_ESC) { // if the first value is an escape sequence
-      getch(); // skip the [
+      m = getch(); // skip the [
+      printf("Middle Key# %c\n", m);
 
       key = getch();
-      printf("Real Key# %d\n", ch);
+      printf("Real Key# %d\n", key);
 
       switch(key) { // the real value
 
         case KEY_UP:
-          printf("for arrow up\n");
-          current -= 1;
+          printf("for arrow up -> %d \n", key);
+          current -= 1;// if current > 1;
           break;
 
         case KEY_DOWN:
-          printf("for arrow down\n");
-          current += 1;
+          printf("for arrow down -> %d \n", key);
+          current += 1;// if current < 9;
           break;
       }
 
-      print_menu(current);
+      // print_menu(current);
+      printf("\n\n");
     }
-  } while(ch = getch());
+  } while(1);
 }
 
 
 int main()
 {
 
-  int zadachka=0,yesorno=0,n;
+  int zadachka = 0, yesorno = 0, n;
 
   do {
     zadachka = menu();
@@ -121,6 +120,7 @@ int main()
       default:
         printf("There is not a zadachka with that number!");
     }
+
 
   } while(1);
 
