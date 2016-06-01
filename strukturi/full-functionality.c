@@ -10,15 +10,16 @@ typedef struct
     float avr;
 } student;
 
-void dummy_slagane(student *s, int *broi_uchenici);
-void slagane(student *s, int *broi_uchenici);
-void pisach(student *s, int *broi_uchenici);
-void chetene(student *s, int *broi_uchenici);
+void dummy_slagane(student *students, int *broi_uchenici);
+void slagane(student *students, int *broi_uchenici);
+void pisach(student *students, int broi_uchenici);
+void chetene(student *students, int *broi_uchenici);
+void print(student *students, int broi);
 void dobavqne(void);
 
 
 int main() {
-    student s[40];
+    student students[40];
     int broi_uchenici = 0;
 
     int choice;
@@ -35,11 +36,12 @@ int main() {
 
         switch (choice) {
         case 1:
-            dummy_slagane(s, &broi_uchenici);
-            pisach(s, &broi_uchenici);
+            dummy_slagane(students, &broi_uchenici);
+            pisach(students, broi_uchenici);
             break;
         case 2:
-            chetene(s, &broi_uchenici);
+            chetene(students, &broi_uchenici);
+            print(students, broi_uchenici);
             break;
         case 3:
             //dobavqne();
@@ -59,29 +61,29 @@ int main() {
     return 0;
 }
 
-void dummy_slagane(student *s, int *broi_uchenici) {
-    *broi_uchenici = 2;
+void dummy_slagane(student *students, int *broi) {
+    *broi = 2;
     const char *dummy_names[10] = {"pesho", "kiro"};
 
     int broi_predmeti = 3, i, x, br, ko=2;
 
-    for(i=0; i < *broi_uchenici; i++)
+    for(i=0; i < *broi; i++)
     {
         ko++;
 
-        s[i].num=i;
+        students[i].num=i;
 
-        strcpy(s[i].name, dummy_names[i]);
+        strcpy(students[i].name, dummy_names[i]);
 
         for(x = 0; x < broi_predmeti; x++) {
-            s[i].marks[x] = ko+x;
+            students[i].marks[x] = ko+x;
         }
     }
 }
 
 
 
-void slagane(student *s, int *broi_uchenici) {
+void slagane(student *students, int *broi_uchenici) {
     int broi_predmeti, i, x, br;
 
     do {
@@ -97,38 +99,38 @@ void slagane(student *s, int *broi_uchenici) {
 
     for(i = 0; i < *broi_uchenici; i++) {
         printf("\n Input number of the student: ");
-        scanf("%d",&s[i].num);
+        scanf("%d",&students[i].num);
 
         printf("\n Input name of the student: ");
         getchar();
-        gets(s[i].name);
+        gets(students[i].name);
 
         for(x = 0; x < broi_predmeti; x++)
         {
             printf(" Enter mark: ");
-            scanf("%d", &s[i].marks[x]);
+            scanf("%d", &students[i].marks[x]);
         }
     }
 
 }
 
-void pisach(student *s, int *broi_uchenici) {
+void pisach(student *students, int broi) {
     FILE *fptr;
 
+    // printf("Pisach broi: %d\n", broi);
     fptr = fopen("file.txt","wb");
-    fwrite(s, sizeof(student) * *broi_uchenici, 1, fptr);
+    fwrite(students, sizeof(student) * broi, 1, fptr);
 
     fclose(fptr);
 }
 
 
 
-void chetene(student *s, int *broi_uchenici){
+void chetene(student *students, int *broi){
 
     FILE *fptr;
-    int i, num;
-    char c;
-    student std;
+    int i;
+    student s;
 
     fptr = fopen("file.txt","rb");
 
@@ -137,28 +139,36 @@ void chetene(student *s, int *broi_uchenici){
         return;
     }
 
-    num = 1;
+    i = 0;
     while(!feof(fptr)) {
-        i = 0;
 
-        if(fread(&std, sizeof(student), 1, fptr))
-        {
-            s[i] = std; // assigning the student to the main variable
-            printf("\n%-3d %-30s", num, std.name);
-            while(std.marks[i] != 0)
-            {
-                printf("%-3d",std.marks[i]);
-                i++;
-            }
-            //printf("%-6.2f",std.avr);
+        if(fread(&s, sizeof(student), 1, fptr)) {
+            students[i] = s; // assign the student to the main variable
+            i++;
         }
-
-        num++;
     }
 
-    *broi_uchenici = num - 1;
-
+    *broi = i;
     fclose(fptr);
+}
+
+
+void print(student *students, int broi) {
+    int k;
+
+    printf("Print broi: %d\n", broi);
+    for (int i = 0; i < broi; i++)
+    {
+        printf("\n%-3d %-30s", i+1, students[i].name);
+
+        k = 0;
+        while(students[i].marks[k] != 0)
+        {
+            printf("%-3d",students[i].marks[k]);
+            k++;
+        }
+        //printf("%-6.2f",students[i].avr);
+    }
 }
 
 
