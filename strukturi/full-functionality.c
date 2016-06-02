@@ -94,6 +94,7 @@ int main()
             printf("Wrong choice.Enter Again");
             break;
         }
+        getchar();
 
     }
     while(choice !=7);
