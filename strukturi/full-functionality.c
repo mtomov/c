@@ -10,12 +10,12 @@ typedef struct
     float avr;
 } student;
 
-int dummy_poemanene_student(student *students);
+void dummy_slagane(student *students, int *broi);
 void slagane(student *students, int *broi_uchenici);
 void pisach(student *students, int broi_uchenici);
 void chetene(student *students, int *broi_uchenici);
 void print(student *students, int broi);
-int poemanene_student(student *s);
+int poemane_student(student *s);
 void dobavqne(student *students, int *broi_uchenici);
 void avr(student *students, int broi);
 void sort(student *students, int broi_uchenici);
@@ -23,7 +23,8 @@ void redaktirane(student *students, int broi_uchenici);
 void myfile();
 void triene(student *students, int *broi_uchenici);
 
-char filename[50]="file.txt";
+const char *DEFAULT_FILE_NAME = "file.txt";
+char filename[50];
 
 
 int main()
@@ -32,6 +33,8 @@ int main()
     int broi_uchenici = 0;
 
     int choice;
+
+    strcpy(filename, DEFAULT_FILE_NAME);
 
     do
     {
@@ -116,25 +119,26 @@ void slagane(student *students, int *broi_uchenici)
 }
 
 
-int dummy_poemanene_student(student *std)
-{
+void dummy_slagane(student *students, int *broi) {
+    *broi = 2;
+    const char *dummy_names[10] = {"pesho", "kiro"};
 
-    const char *dummy_name = "pesho";
+    int broi_predmeti = 3, i, x, br, ko=2;
 
-
-    int broi_predmeti = 3, i, x, br;
-
-    std->num = 5;
-
-    strcpy(std->name, dummy_name);
-
-    for(x = 0; x < broi_predmeti; x++)
+    for(i=0; i < *broi; i++)
     {
-        std->marks[x] = x;
-    }
+        ko++;
 
-    return 0;
+        students[i].num=i+1;
+
+        strcpy(students[i].name, dummy_names[i]);
+
+        for(x = 0; x < broi_predmeti; x++) {
+            students[i].marks[x] = ko+x;
+        }
+    }
 }
+
 
 int poemane_student(student *std)
 {
@@ -337,13 +341,13 @@ void myfile()
     printf ("Now the name of file to be changed is:\n %s",filename);
 
     printf("\n You have choosen to rename %s.\nPlease type the new name of the file:\n", filename);
-    scanf("%s", &newfilename);
+    gets(newfilename);
 
     if(rename(filename, newfilename) == 0)
     {
         printf("\n %s has been renamed %s.\n", filename, newfilename);
 
-        strcpy(filename,&newfilename);
+        strcpy(filename, newfilename);
 
     }
     else
@@ -354,26 +358,30 @@ void myfile()
 }
 
 
-void triene(student *students, int *broi)
-{    print(students,*broi);
+void triene(student *students, int *broi) {
+    print(students, *broi);
 
-    int j,i,num,ok=0;
+    int k, i, num, ok=0;
+    bool found = false;
 
     printf("\n Enter number of student: ");
     scanf("%d",&num);
 
-    student students_new[40];
-
     for (i = 0; i < *broi; i++) {
-        if(students[i].num != num) {
-            students_new[j] = students[i];
-            j++;
+        if(students[i].num == num) {
+            found = true;
+            break;
         }
     }
 
-    students=students_new;
-    *broi = *&broi-1;
+    if(!found) return;
+    *broi = *broi-1;
 
-     print(students,*broi);
+    for (k = i; k < *broi; k++) {
+        students[k] = students[k+1];
+    }
+
+
+    print(students, *broi);
 
 }
