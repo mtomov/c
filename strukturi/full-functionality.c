@@ -1,6 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "conio.h"
+
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations".
+
+
+#define KEY_UP 65
+#define KEY_DOWN 66
+#define KEY_OUT 61 // =
+#define KEY_ESC 27
+#define KEY_ENTER 10
+
 
 typedef struct
 {
@@ -21,6 +32,9 @@ void avr(student *students, int broi);
 void sort(student *students, int broi_uchenici);
 void redaktirane(student *students, int broi_uchenici);
 void myfile();
+void print_menu(int num);
+void print_selector(int option, int num);
+int get_choice();
 void triene(student *students, int *broi_uchenici);
 
 const char *DEFAULT_FILE_NAME = "file.txt";
@@ -32,24 +46,13 @@ int main()
     student students[40];
     int broi_uchenici = 0;
 
-    int choice;
+    int choice = 1;
 
     strcpy(filename, DEFAULT_FILE_NAME);
 
     do
     {
-        printf("\n\n### Menu ###\n");
-        printf("1. Syzdai\n");
-        printf("2. Cheti\n");
-        printf("3. Dobavi\n");
-        printf("4. Redaktirane\n");
-        printf("5. Smeni faila si\n");
-        printf("6. Iztrii zapis\n");
-        printf("7. Exit\n");
-
-        printf("\nEnter choice: ");
-        scanf("%d", &choice);
-
+        choice = get_choice();
         switch (choice)
         {
         case 1:
@@ -91,12 +94,79 @@ int main()
             printf("Wrong choice.Enter Again");
             break;
         }
+
     }
     while(choice !=7);
 
 
     return 0;
 }
+
+void print_menu(int num) {
+    // system ( "cls" );
+    printf("\n\n### Menu ###\n");
+
+    print_selector(1, num);
+    printf("1. Syzdai\n");
+
+    print_selector(2, num);
+    printf("2. Cheti\n");
+
+    print_selector(3, num);
+    printf("3. Dobavi\n");
+
+    print_selector(4, num);
+    printf("4. Redaktirane\n");
+
+    print_selector(5, num);
+    printf("5. Smeni faila si\n");
+
+    print_selector(6, num);
+    printf("6. Iztrii zapis\n");
+
+    print_selector(7, num);
+    printf("7. Exit\n");
+
+}
+void print_selector(int option, int num) {
+    if (option == num)
+        printf("> ");
+    else
+        printf("  ");
+}
+
+int get_choice() {
+
+  int current = 1;
+  char ch, key, m;
+
+  do {
+    print_menu(current);
+    ch = getch();
+
+    if (ch == '\n')
+      return current;
+
+    if (ch == '\033') { // if the first value is an escape sequence
+      getch(); // skip the [
+      switch(getch()) { // the real value
+
+        case 'A':
+          // printf("for arrow up -> %d \n", key);
+          current -= 1;// if current > 1;
+          break;
+
+        case 'B':
+          // printf("for arrow down -> %d \n", key);
+          current += 1;// if current < 9;
+          break;
+      }
+
+      printf("\n\n");
+    }
+  } while(1);
+}
+
 
 
 void slagane(student *students, int *broi_uchenici)
