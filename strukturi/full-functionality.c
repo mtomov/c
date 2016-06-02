@@ -10,11 +10,12 @@ typedef struct
     float avr;
 } student;
 
-void dummy_slagane(student *students, int *broi_uchenici);
+int dummy_chetene_student(student *students);
 void slagane(student *students, int *broi_uchenici);
 void pisach(student *students, int broi_uchenici);
 void chetene(student *students, int *broi_uchenici);
 void print(student *students, int broi);
+int chetene_student(student *s);
 void dobavqne(void);
 
 
@@ -24,7 +25,8 @@ int main() {
 
     int choice;
 
-    do {
+    do
+    {
         printf("\n\n### Menu ###\n");
         printf("1. Syzdai\n");
         printf("2. Cheti\n");
@@ -34,9 +36,10 @@ int main() {
         printf("\nEnter choice: ");
         scanf("%d", &choice);
 
-        switch (choice) {
+        switch (choice)
+        {
         case 1:
-            dummy_slagane(students, &broi_uchenici);
+            slagane(students, &broi_uchenici);
             pisach(students, broi_uchenici);
             break;
         case 2:
@@ -61,57 +64,79 @@ int main() {
     return 0;
 }
 
-void dummy_slagane(student *students, int *broi) {
-    *broi = 2;
-    const char *dummy_names[10] = {"pesho", "kiro"};
 
-    int broi_predmeti = 3, i, x, br, ko=2;
+void slagane(student *students, int *broi_uchenici) {
+    int x = 0;
+    student s;
 
-    for(i=0; i < *broi; i++)
+    while(x < 2)
     {
-        ko++;
+        if(chetene_student(&students[x]))
+            break;
 
-        students[i].num=i;
+        printf("%s\n", students[x].name);
 
-        strcpy(students[i].name, dummy_names[i]);
-
-        for(x = 0; x < broi_predmeti; x++) {
-            students[i].marks[x] = ko+x;
-        }
+        x++;
     }
+
+
+    *broi_uchenici = x;
 }
 
 
 
-void slagane(student *students, int *broi_uchenici) {
-    int broi_predmeti, i, x, br;
+int dummy_chetene_student(student *std) {
+    const char *dummy_name = "pesho";
+    student s;
 
-    do {
-        printf(" Input number of students:");
-        scanf("%d", broi_uchenici);
-    } while(*broi_uchenici>40 || *broi_uchenici<1);
+    int broi_predmeti = 3, i, x, br;
 
-    do {
-        printf("\n Input number of subjects: ");
-        scanf("%d",&broi_predmeti);
-    } while(broi_predmeti>20 || broi_predmeti<1);
+    std->num = 5;
 
+    strcpy(std->name, dummy_name);
 
-    for(i = 0; i < *broi_uchenici; i++) {
-        printf("\n Input number of the student: ");
-        scanf("%d",&students[i].num);
-
-        printf("\n Input name of the student: ");
-        getchar();
-        gets(students[i].name);
-
-        for(x = 0; x < broi_predmeti; x++)
-        {
-            printf(" Enter mark: ");
-            scanf("%d", &students[i].marks[x]);
-        }
+    for(x = 0; x < broi_predmeti; x++) {
+        std->marks[x] = x;
     }
 
+    return 0;
+}
+
+
+int chetene_student(student *std) {
+
+    int broi_predmeti, i, x=0;
+
+    printf("\n\n Input a number: ");
+    scanf("%d", &std->num);
+
+    if(std->num == 0)
+        return 0;
+
+    getchar();
+
+    printf("\n Input name: ");
+    // getchar();
+    gets(std->name);
+
+    //std->avr=0;
+    for(i=0; i<20; i++) std->marks[i]=0;
+
+    i=0;
+
+    while(i<20)
+    {
+
+        printf("\n Input a mark: ");
+        scanf("%d", &std->marks[i]);
+
+        if(std->marks[i]==0)
+            break;
+        // std->avr=std->avr+std->marks[i];
+        i++;
+    }
+
+    // if(i>0) std->avr=std->avr/i;
 }
 
 void pisach(student *students, int broi) {
@@ -126,7 +151,7 @@ void pisach(student *students, int broi) {
 
 
 
-void chetene(student *students, int *broi){
+void chetene(student *students, int *broi) {
 
     FILE *fptr;
     int i;
@@ -134,15 +159,18 @@ void chetene(student *students, int *broi){
 
     fptr = fopen("file.txt","rb");
 
-    if(fptr == NULL) {
+    if(fptr == NULL)
+    {
         printf("not found");
         return;
     }
 
     i = 0;
-    while(!feof(fptr)) {
+    while(!feof(fptr))
+    {
 
-        if(fread(&s, sizeof(student), 1, fptr)) {
+        if(fread(&s, sizeof(student), 1, fptr))
+        {
             students[i] = s; // assign the student to the main variable
             i++;
         }
@@ -154,12 +182,12 @@ void chetene(student *students, int *broi){
 
 
 void print(student *students, int broi) {
-    int k;
+    int k,i;
 
     printf("Print broi: %d\n", broi);
-    for (int i = 0; i < broi; i++)
+    for ( i = 0; i < broi; i++)
     {
-        printf("\n%-3d %-30s", i+1, students[i].name);
+        printf("\n%-3d %-30s", students[i].num, students[i].name);
 
         k = 0;
         while(students[i].marks[k] != 0)
