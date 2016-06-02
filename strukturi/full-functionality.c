@@ -10,16 +10,24 @@ typedef struct
     float avr;
 } student;
 
-int dummy_chetene_student(student *students);
+int dummy_poemanene_student(student *students);
 void slagane(student *students, int *broi_uchenici);
 void pisach(student *students, int broi_uchenici);
 void chetene(student *students, int *broi_uchenici);
 void print(student *students, int broi);
-int chetene_student(student *s);
-void dobavqne(void);
+int poemanene_student(student *s);
+void dobavqne(student *students, int *broi_uchenici);
+void avr(student *students, int broi);
+void sort(student *students, int broi_uchenici);
+void redaktirane(student *students, int broi_uchenici);
+void myfile();
+void triene(student *students, int *broi_uchenici);
+
+char filename[50]="file.txt";
 
 
-int main() {
+int main()
+{
     student students[40];
     int broi_uchenici = 0;
 
@@ -31,7 +39,10 @@ int main() {
         printf("1. Syzdai\n");
         printf("2. Cheti\n");
         printf("3. Dobavi\n");
-        printf("4. Exit\n");
+        printf("4. Redaktirane\n");
+        printf("5. Smeni faila si\n");
+        printf("6. Iztrii zapis\n");
+        printf("7. Exit\n");
 
         printf("\nEnter choice: ");
         scanf("%d", &choice);
@@ -40,6 +51,8 @@ int main() {
         {
         case 1:
             slagane(students, &broi_uchenici);
+            sort(students,broi_uchenici);
+            avr(students, broi_uchenici);
             pisach(students, broi_uchenici);
             break;
         case 2:
@@ -47,9 +60,27 @@ int main() {
             print(students, broi_uchenici);
             break;
         case 3:
-            //dobavqne();
+            dobavqne(students, &broi_uchenici);
+            sort(students,broi_uchenici);
+            avr(students, broi_uchenici);
+            pisach(students, broi_uchenici);
             break;
         case 4:
+            redaktirane(students, broi_uchenici);
+            sort(students,broi_uchenici);
+            avr(students, broi_uchenici);
+            pisach(students, broi_uchenici);
+            break;
+        case 5:
+            myfile();
+            break;
+        case 6:
+            triene(students, &broi_uchenici);
+            sort(students,broi_uchenici);
+            avr(students, broi_uchenici);
+            pisach(students, broi_uchenici);
+            break;
+        case 7:
             printf("goodbye");
             exit (1);
             break;
@@ -58,23 +89,24 @@ int main() {
             break;
         }
     }
-    while(choice !=4);
+    while(choice !=7);
 
 
     return 0;
 }
 
 
-void slagane(student *students, int *broi_uchenici) {
+void slagane(student *students, int *broi_uchenici)
+{
     int x = 0;
     student s;
 
-    while(x < 2)
+    while(1)
     {
-        if(chetene_student(&students[x]))
+        if(poemane_student(&students[x])==0)
             break;
 
-        printf("%s\n", students[x].name);
+        //printf("%s\n", students[x].name);
 
         x++;
     }
@@ -84,10 +116,11 @@ void slagane(student *students, int *broi_uchenici) {
 }
 
 
+int dummy_poemanene_student(student *std)
+{
 
-int dummy_chetene_student(student *std) {
     const char *dummy_name = "pesho";
-    student s;
+
 
     int broi_predmeti = 3, i, x, br;
 
@@ -95,15 +128,16 @@ int dummy_chetene_student(student *std) {
 
     strcpy(std->name, dummy_name);
 
-    for(x = 0; x < broi_predmeti; x++) {
+    for(x = 0; x < broi_predmeti; x++)
+    {
         std->marks[x] = x;
     }
 
     return 0;
 }
 
-
-int chetene_student(student *std) {
+int poemane_student(student *std)
+{
 
     int broi_predmeti, i, x=0;
 
@@ -119,7 +153,7 @@ int chetene_student(student *std) {
     // getchar();
     gets(std->name);
 
-    //std->avr=0;
+
     for(i=0; i<20; i++) std->marks[i]=0;
 
     i=0;
@@ -132,32 +166,73 @@ int chetene_student(student *std) {
 
         if(std->marks[i]==0)
             break;
-        // std->avr=std->avr+std->marks[i];
+
         i++;
     }
+    return 1;
 
-    // if(i>0) std->avr=std->avr/i;
 }
 
-void pisach(student *students, int broi) {
+void pisach(student *students, int broi)
+{
+
     FILE *fptr;
 
     // printf("Pisach broi: %d\n", broi);
-    fptr = fopen("file.txt","wb");
+    fptr = fopen(filename,"wb");
+
     fwrite(students, sizeof(student) * broi, 1, fptr);
 
     fclose(fptr);
 }
 
+void avr(student *students, int broi)
+{
+
+    int i=0,k;
+    students[i].avr=0;
+
+    for ( i = 0; i < broi; i++)
+    {
+
+        k = 0;
+        while(students[i].marks[k] != 0)
+        {
+            students[i].avr=students[i].avr+students[i].marks[k];
+            k++;
+        }
+        students[i].avr=students[i].avr/k;
+    }
 
 
-void chetene(student *students, int *broi) {
+}
+void sort(student *students, int broi)
+{
+    int i, j = 0;
+    student temp;
+
+    for (i = 1; i < broi; i++)
+    {
+        for (j = 0; j < broi - i; j++)
+        {
+            if (students[j].num > students[j + 1].num)
+            {
+                temp = students[j];
+                students[j] = students[j + 1];
+                students[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void chetene(student *students, int *broi)
+{
 
     FILE *fptr;
     int i;
     student s;
 
-    fptr = fopen("file.txt","rb");
+    fptr = fopen(filename,"rb");
 
     if(fptr == NULL)
     {
@@ -180,8 +255,8 @@ void chetene(student *students, int *broi) {
     fclose(fptr);
 }
 
-
-void print(student *students, int broi) {
+void print(student *students, int broi)
+{
     int k,i;
 
     printf("Print broi: %d\n", broi);
@@ -195,121 +270,110 @@ void print(student *students, int broi) {
             printf("%-3d",students[i].marks[k]);
             k++;
         }
-        //printf("%-6.2f",students[i].avr);
+        printf("%-6.2f",students[i].avr);
     }
 }
 
+void dobavqne(student *students, int *broi_uchenici)
+{
 
-/*
-void dobavqne(void){
+    int x = *broi_uchenici;
+    student s;
 
-     FILE *fptr;
-    student s[40];
-    student pom;
-    int  broi_uchenici, broi_predmeti,i, x, br;
-
- fptr=fopen("file.txt","wb");
-
-   if(fptr==NULL){
-       printf("Error!");
-       exit(1);
-   }
-
-  do
+    while(1)
     {
-        printf(" Input number of students:");
-        scanf("%d",&broi_uchenici);
+        if(poemane_student(&students[x])==0)
+            break;
+
+        //printf("%s\n", students[x].name);
+
+        x++;
     }
-    while(broi_uchenici>40||broi_uchenici<1);
-    do
-    {
-        printf("\n Input number of subjects: ");
-        scanf("%d",&broi_predmeti);
-    }
-    while(broi_predmeti>20 || broi_predmeti<1);
-    for(i=0; i<broi_uchenici; i++)
-    {
-        printf("\n Input number of the student: ");
-        scanf("%d",&s[i].num);
-        printf("\n Input name of the student: ");
-        getchar();
-        gets(s[i].name);
-        for(x=0; x<broi_predmeti; x++){
-            printf(" Enter mark: ");
-            scanf("%d", &s[i].marks[x]);
-        }
-    }
-    br=0;
 
-    for(i=0; i<broi_uchenici; i++)
+
+    *broi_uchenici = x;
+
+}
+
+void redaktirane(student *students, int broi)
+{
+
+    int k,i,num,ok=0;
+
+    print(students, broi);
+
+
+    printf("\n Enter number of student: ");
+    scanf("%d",&num);
+
+    for(i=0; i < broi; i++)
     {
-        s[i].avr=0;
-        for(x=0; x<broi_predmeti; x++){
-            s[i].avr=s[i].avr+s[i].marks[x];
-            s[i].avr=s[i].avr/broi_predmeti;
-           // printf("\n Avr: %s ",s[i].avr);
-        }
-    }
-    do
-    {
-        i=0;
-        do
+
+        if(students[i].num==num)
         {
-            if(s[i+1].num<s[i].num)
-            {
-                pom=s[i];
-                s[i]=s[i+1];
-                s[i+1]=pom;
-            }
-            i++;
-        }
-        while(i!=broi_uchenici-1);
-        br++;
-    }while(br!=broi_uchenici-1);
+            ok=1;
+            break;
 
- fprintf(fptr,"\nName: %s",s);
-
-   fclose(fptr);
-
-   // fwrite(s,sizeof(s),1,fptr);
-
- printf("\n Ocenka ");
-
-}
-
-
-void sort() {
-
-    br=0;
-
-    for(i=0; i<broi_uchenici; i++)
-    {
-        s[i].avr=0;
-        for(x=0; x<broi_predmeti; x++){
-            s[i].avr=s[i].avr+s[i].marks[x];
-            s[i].avr=s[i].avr/broi_predmeti;
-           // printf("\n Avr: %s ",s[i].avr);
         }
     }
-    do
+    if (ok==0)
     {
-        i=0;
-        do
-        {
-            if(s[i+1].num<s[i].num)
-            {
-                pom=s[i];
-                s[i]=s[i+1];
-                s[i+1]=pom;
-            }
-            i++;
-        }
-        while(i!=broi_uchenici-1);
-        br++;
-    }while(br!=broi_uchenici-1);
+
+        printf("No such number!");
+        return;
+    }
+
+    poemane_student(&students[i]);
+
 
 }
 
-*/
+void myfile()
+{
+
+    char  newfilename[101];
 
 
+    printf ("Now the name of file to be changed is:\n %s",filename);
+
+    printf("\n You have choosen to rename %s.\nPlease type the new name of the file:\n", filename);
+    scanf("%s", &newfilename);
+
+    if(rename(filename, newfilename) == 0)
+    {
+        printf("\n %s has been renamed %s.\n", filename, newfilename);
+
+        strcpy(filename,&newfilename);
+
+    }
+    else
+    {
+        fprintf(stderr, "Error renaming %s.\n", filename);
+    }
+
+}
+
+
+void triene(student *students, int *broi)
+{    print(students,*broi);
+
+    int j,i,num,ok=0;
+
+    printf("\n Enter number of student: ");
+    scanf("%d",&num);
+
+    student students_new[40];
+
+    for (i = 0; i < *broi; i++) {
+        if(students[i].num != num) {
+            students_new[j] = students[i];
+            j++;
+        }
+    }
+
+    students=students_new;
+    *broi = *&broi-1;
+
+     print(students,*broi);
+
+}
