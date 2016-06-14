@@ -1,3 +1,8 @@
+/*
+ * Търсене и заместване в низ.
+ */
+ 
+
 #include <stdio.h>
 // #include <conio.h> // Windows
 
